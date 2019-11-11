@@ -81,6 +81,12 @@ class GitOriginCommmand extends Command
         $output = [];
         $status = null;
         exec($command, $output, $status);
+
+        $this->info("Deleting bitquick branch");
+        $command = "git branch -d bitquick";
+        $output = [];
+        $status = null;
+        exec($command, $output, $status);
     }
 
 
