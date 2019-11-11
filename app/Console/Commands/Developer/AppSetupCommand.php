@@ -14,7 +14,7 @@ class AppSetupCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'setup';
+    protected $signature = 'setup {--app-name=}';
 
     /**
      * The console command description.
@@ -99,10 +99,14 @@ class AppSetupCommand extends Command
     }
 
     private function setUserEnvVars($defaultEnv) {
-        foreach($defaultEnv as $key => &$value) {
-            $tmp = $this->ask($key . " [{$value}]");
-            if (!empty($tmp)) {
-                $value = $tmp;
+        if ( $appName = $this->option('app-name')) {
+            $defaultEnv['APP_NAME'] = $appName;
+        } else {
+            foreach($defaultEnv as $key => &$value) {
+                $tmp = $this->ask($key . " [{$value}]");
+                if (!empty($tmp)) {
+                    $value = $tmp;
+                }
             }
         }
         return $defaultEnv;
