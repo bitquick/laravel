@@ -39,12 +39,16 @@ class GitOriginCommmand extends Command
     {
         $this->createRepo();
         $this->setOrigin();
+        $this->setDevelopmentBranch();
+        $this->deleteBitquickBranch();
+        return;
     }
 
     private function createRepo() {
         $appName = config('app.name');
         $this->info("Creating GitHub repository");
-        $command = "curl --netrc-file ~/.ssh/netrc https://api.github.com/user/repos? -d '{\"name\":\"{$appName}\", \"private\": true}'";
+        $command = "curl --netrc-file %userprofile%/.ssh/netrc https://api.github.com/user/repos? -d \"{\\\"name\\\":\\\"{$appName}\\\", \\\"private\\\": true}\"";
+        $this->info($command);
         $output = [];
         $status = null;
         exec($command, $output, $status);
@@ -52,17 +56,34 @@ class GitOriginCommmand extends Command
 
     private function setOrigin() {
         if (empty($user = $this->option('user'))) {
-           $user = $this->ask('GitHub Username');
+            $user = $this->ask('GitHub Username');
         }
 
         $appName = config('app.name');
         $this->info("Setting Git origin");
         $command = "git remote set-url origin git@github.com:{$user}/{$appName}";
-        dd($command);
         $output = [];
         $status = null;
         exec($command, $output, $status);
     }
+
+    private function setDevelopmentBranch() {
+        $this->info("Setting development branch");
+        $command = "git checkout -b development";
+        $output = [];
+        $status = null;
+        exec($command, $output, $status);
+    }
+
+    private function deleteBitquickBranch() {
+        $this->info("Deleting bitquick branch");
+        $command = "git branch -rd origin/bitquick";
+        $output = [];
+        $status = null;
+        exec($command, $output, $status);
+    }
+
+
 
 
 }
