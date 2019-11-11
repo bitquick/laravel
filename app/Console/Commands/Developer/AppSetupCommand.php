@@ -4,6 +4,8 @@ namespace App\Console\Commands\Developer;
 
 use Exception;
 use Illuminate\Console\Command;
+use Dotenv\Dotenv;
+use Illuminate\Foundation\Bootstrap\LoadConfiguration;
 
 class AppSetupCommand extends Command
 {
@@ -80,8 +82,6 @@ class AppSetupCommand extends Command
 
     private function appSetup() {
         $this->configLaravelEnvironment();
-        $this->configLaradockEnvironment();
-        $this->configPhpStorm();
     }
 
     private function configLaravelEnvironment() {
@@ -90,15 +90,6 @@ class AppSetupCommand extends Command
         $env = $this->setUserEnvVars($default_env);
         $this->writeEnvFile($env);
         $this->call('key:generate');
-        $this->call('laradock:configure');
-    }
-
-    private function configLaradockEnvironment() {
-
-    }
-
-    private function configPhpStorm() {
-
     }
 
     private function check_if_env_file_exists() {
